@@ -1,13 +1,13 @@
-package com.app.LOLEsport_Back;
+package com.app.Spotify_Song_2023;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LOLEsportApplication {
+public class SpotifySongApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LOLEsportApplication.class, args);
+		SpringApplication.run(SpotifySongApplication.class, args);
 	}
 
 }
