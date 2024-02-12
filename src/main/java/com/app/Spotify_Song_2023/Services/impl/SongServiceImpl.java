@@ -42,9 +42,33 @@ public class SongServiceImpl implements SongService {
     }
 
     public SpotifySongDTO getFamousSongById(Long songId){
-        Optional<SpotifySong> spotifySongRepo = spotifySongRepository.findById(songId);
         SpotifySong spotifySong = spotifySongRepo.orElseThrow(() -> new EntityNotFoundException("Entity not found with id: " + songId));
         return transormSpotifySongToDTOSingle(spotifySong);
+    }
+
+    public SpotifySong updateFamousSong(Long songId , SpotifySongDTO spotifySongDTO){
+        SpotifySong spotifySong = spotifySongRepository.findById(songId).orElseThrow(() -> new EntityNotFoundException("Entity not found with id: " + songId));
+        spotifySong.setTrack_name(spotifySongDTO.getTrack_name());
+        spotifySong.setArtist_name(String.join(", ", spotifySongDTO.getArtist_name()));
+        spotifySong.setArtist_count(spotifySongDTO.getArtist_count());
+        spotifySong.setReleased_year(String.valueOf(spotifySongDTO.getReleased().getYear()));
+        spotifySong.setReleased_month(String.valueOf(spotifySongDTO.getReleased().getMonth()));
+        spotifySong.setReleased_day(String.valueOf(spotifySongDTO.getReleased().getDayOfMonth()));
+        spotifySong.setIn_spotify_playlists(spotifySongDTO.getIn_spotify_playlists());
+        spotifySong.setIn_spotify_charts(spotifySong.getIn_spotify_charts());
+        spotifySong.setStreams(spotifySongDTO.getStreams());
+        spotifySong.setIn_apple_playlists(spotifySong.getIn_apple_playlists());
+        spotifySong.setIn_apple_charts(spotifySong.getIn_apple_charts());
+        spotifySongRepository.save(spotifySong);
+        return spotifySong;
+    }
+
+    public SpotifySong deleteFamousSong(Long songId){
+        SpotifySong spotifySong = spotifySongRepository.findById(songId).orElseThrow(() -> new EntityNotFoundException("Entity not found with id: " + songId));
+        if(spotifySong != null){
+            spotifySongRepository.deleteById(spotifySong.getId());
+        }
+        return spotifySong;
     }
 
     private List<SpotifySongDTO> transormSpotifySongToDTO(List<SpotifySong> spotifySongList){
@@ -118,5 +142,6 @@ public class SongServiceImpl implements SongService {
                 .collect(Collectors.toList());
         return new PageImpl<>(listOfAllFamousSongDTO, spotifySongPage.getPageable(), spotifySongPage.getTotalElements());
     }
+
 
 }

@@ -12,10 +12,9 @@ import java.util.List;
 public interface SongService {
 
     public List<SpotifySongDTO> getAllFamousSong() throws DataAccessException;
-
     public Page<SpotifySongDTO> getFamousSongPageable(PageRequest pageRequest);
-
     public Page<SpotifySongDTO> getFamousSongPageableContainsTrackName(Pageable pageRequest, String trackName);
-
     public SpotifySongDTO getFamousSongById(Long songId);
+    public SpotifySong updateFamousSong(Long songId, SpotifySongDTO spotifySongDTO);
+    public SpotifySong deleteFamousSong(Long songId);
 }

@@ -1,17 +1,18 @@
 package com.app.Spotify_Song_2023.Controllers;
 
+import com.app.Spotify_Song_2023.DTO.SpotifySongDTO;
 import com.app.Spotify_Song_2023.Exception.ArtistsException;
+import com.app.Spotify_Song_2023.Models.SpotifySong;
+import com.app.Spotify_Song_2023.Repository.SpotifySongRepository;
 import com.app.Spotify_Song_2023.Services.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api")
@@ -19,6 +20,8 @@ public class SongController {
 
     @Autowired
     SongService songService;
+    @Autowired
+    SpotifySongRepository spotifySongRepository;
 
     @GetMapping("/songs")
     public ResponseEntity<?> getSongPageable(
@@ -48,5 +51,26 @@ public class SongController {
     @GetMapping("/song/{id}")
     public ResponseEntity<?> getSongById(@PathVariable("id") Long songId) throws ArtistsException {
         return ResponseEntity.ok(songService.getFamousSongById(songId));
+    }
+
+    @PutMapping("/song/{id}")
+    public ResponseEntity<?> updateSongById(@PathVariable("id") Long songId, @RequestBody SpotifySongDTO updateModel) throws ArtistsException {
+        Optional<SpotifySong> spotifySong = spotifySongRepository.findById(songId);
+        if(spotifySong.isPresent()){
+            return ResponseEntity.ok(songService.updateFamousSong(songId, updateModel));
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/song/{id}")
+    public ResponseEntity<?> deleteSongById(@PathVariable("id") Long songId) throws ArtistsException {
+        Optional<SpotifySong> spotifySong = spotifySongRepository.findById(songId);
+        if(spotifySong.isPresent()){
+            return ResponseEntity.ok(songService.deleteFamousSong(songId));
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+
     }
 }
